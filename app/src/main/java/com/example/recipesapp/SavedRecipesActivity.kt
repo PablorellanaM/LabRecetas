@@ -15,18 +15,25 @@ import com.example.recipesapp.ui.theme.RecipesAppTheme
 class SavedRecipesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val savedRecipes: ArrayList<Recipe>? = intent.getParcelableArrayListExtra("SAVED_RECIPES")
+        val savedRecipes: ArrayList<Recipe>? = intent.getParcelableArrayListExtra("SAVED_RECIPES") // Obtener las recetas guardadas
 
         setContent {
             RecipesAppTheme {
                 Scaffold(
                     topBar = {
-                        TopAppBar(title = { Text("Saved Recipes") })
+                        TopAppBar(
+                            title = { Text("Saved Recipes") }
+                        )
                     }
-                ) {
+                ) { innerPadding ->
                     savedRecipes?.let {
-                        SavedRecipesScreen(it)
-                    } ?: Text(text = "No saved recipes")
+                        SavedRecipesScreen(
+                            recipes = it,
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    } ?: run {
+                        NoSavedRecipesScreen(modifier = Modifier.padding(innerPadding))
+                    }
                 }
             }
         }
@@ -34,20 +41,37 @@ class SavedRecipesActivity : ComponentActivity() {
 }
 
 @Composable
-fun SavedRecipesScreen(savedRecipes: List<Recipe>) {
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(savedRecipes) { recipe ->
-            Card(
-                elevation = 4.dp,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = recipe.name)
-                    Text(text = "${recipe.cookingTime} mins")
-                }
-            }
+fun SavedRecipesScreen(recipes: List<Recipe>, modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier.padding(16.dp)) {
+        items(recipes) { recipe ->
+            SavedRecipeItem(recipe)
         }
+    }
+}
+
+@Composable
+fun SavedRecipeItem(recipe: Recipe) {
+    Card(
+        elevation = 4.dp,
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = recipe.name, style = MaterialTheme.typography.h6)
+            Text(text = "${recipe.cookingTime} mins", style = MaterialTheme.typography.body2)
+        }
+    }
+}
+
+@Composable
+fun NoSavedRecipesScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = androidx.compose.ui.Alignment.Center
+    ) {
+        Text(text = "No saved recipes", style = MaterialTheme.typography.h6)
     }
 }
