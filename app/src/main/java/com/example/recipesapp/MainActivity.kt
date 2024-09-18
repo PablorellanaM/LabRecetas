@@ -10,8 +10,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.example.recipesapp.ui.theme.RecipesAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,7 +50,9 @@ fun MainScreen() {
                 }
             )
         }
-    )
+    ) {
+        // Pantalla principal vacía, el Drawer maneja la navegación entre actividades
+    }
 }
 
 @Composable
