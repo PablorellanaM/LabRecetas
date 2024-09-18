@@ -6,10 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import com.example.recipesapp.ui.theme.RecipesAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    val savedRecipes = remember { mutableStateListOf<Recipe>() }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -34,16 +37,20 @@ fun MainScreen() {
         drawerContent = {
             DrawerBody(
                 onRecipeClick = {
-                    // Navegar a la lista de recetas
+                    // Navegar a la lista de recetas populares
+                    val context = LocalContext.current
+                    context.startActivity(Intent(context, RecipeListActivity::class.java))
                 },
                 onSavedRecipesClick = {
                     // Navegar a recetas guardadas
+                    val context = LocalContext.current
+                    val intent = Intent(context, SavedRecipesActivity::class.java)
+                    intent.putParcelableArrayListExtra("SAVED_RECIPES", ArrayList(savedRecipes))
+                    context.startActivity(intent)
                 }
             )
         }
-    ) {
-        // Aquí iría el contenido principal
-    }
+    )
 }
 
 @Composable
@@ -55,13 +62,5 @@ fun DrawerBody(onRecipeClick: () -> Unit, onSavedRecipesClick: () -> Unit) {
         TextButton(onClick = onSavedRecipesClick) {
             Text(text = "Saved Recipes")
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    RecipesAppTheme {
-        MainScreen()
     }
 }
