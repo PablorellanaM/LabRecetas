@@ -3,6 +3,7 @@ package com.example.recipesapp
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+
 object DataProvider {
     val recipeList = listOf(
         Recipe(
